@@ -36,7 +36,33 @@ void loadInstructions(Instruction_Memory *i_mem, const char *trace)
             strcmp(raw_instr, "and") == 0) {
             parseRType(raw_instr, &(i_mem->instructions[IMEM_index]));
             i_mem->last = &(i_mem->instructions[IMEM_index]);
-		  }
+		  } else if(
+		      strcmp(raw_instr, "addi") == 0 ||
+            strcmp(raw_instr, "slli") == 0 ||
+            strcmp(raw_instr, "srli") == 0 ||
+            strcmp(raw_instr, "jalr") == 0 ||
+            strcmp(raw_instr, "xori") == 0 ||
+            strcmp(raw_instr, "ori")  == 0 ||
+            strcmp(raw_instr, "andi") == 0 ||
+				strcmp(raw_instr, "ld") == 0) {
+				parseIType(raw_instr, &(i_mem->instructions[IMEM_index]));
+            i_mem->last = &(i_mem->instructions[IMEM_index]);
+		  } else if(
+				strcmp(raw_instr, "sd") == 0) {
+				parseSType(raw_instr, &(i_mem->instructions[IMEM_index]));
+            i_mem->last = &(i_mem->instructions[IMEM_index]);
+		  } else if(
+		      strcmp(raw_instr, "beq") == 0 ||
+            strcmp(raw_instr, "bne") == 0 ||
+            strcmp(raw_instr, "blt") == 0 ||
+				strcmp(raw_instr, "bge") == 0) {
+				parseSBType(raw_instr, &(i_mem->instructions[IMEM_index]));
+            i_mem->last = &(i_mem->instructions[IMEM_index]);
+		  } else if(
+		      strcmp(raw_instr, "jal") == 0) {
+				parseUJType(raw_instr, &(i_mem->instructions[IMEM_index]));
+            i_mem->last = &(i_mem->instructions[IMEM_index]);
+		  } 
 
         IMEM_index++;
         PC += 4;
