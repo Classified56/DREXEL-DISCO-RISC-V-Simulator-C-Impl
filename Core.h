@@ -17,7 +17,10 @@ typedef struct Core
     Addr PC; // Keep track of program counter
 
     // TODO, define your components here
-    // What else you need? Data memory? Register file?
+    uint64_t registers[32];
+	 uint8_t memory[512]; 
+
+	 // What else you need? Data memory? Register file?
     Instruction_Memory *instr_mem;
     
     // TODO, simulation function

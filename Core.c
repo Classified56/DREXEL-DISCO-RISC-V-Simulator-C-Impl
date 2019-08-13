@@ -19,7 +19,8 @@ bool tickFunc(Core *core)
     unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
     
     // (Step 2) ...
-    
+    printf("Instruction: %u -- %x\n", instruction, instruction);
+
     // (Step N) Increment PC. FIXME, is it correct to always increment PC by 4?!
     core->PC += 4;
 
