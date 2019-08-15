@@ -18,7 +18,7 @@ typedef struct Core
 
     // TODO, define your components here
     uint64_t registers[32];
-	 uint8_t memory[512]; 
+	 uint8_t memory[1024]; 
 
 	 // What else you need? Data memory? Register file?
     Instruction_Memory *instr_mem;
