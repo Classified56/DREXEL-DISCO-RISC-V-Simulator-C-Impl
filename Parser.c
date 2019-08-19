@@ -195,13 +195,13 @@ void parseSType(char *opr, Instruction *instr) {
     }
 
     char *reg = strtok(NULL, ", "), *sd;
-    unsigned rs_1 = regIndex(reg);
+    unsigned rs_2 = regIndex(reg);
 	 
 	 sd = strtok(NULL, "(");
 	 unsigned immediate = atoi(sd);
 
 	 reg = strtok(NULL, ")");
-	 unsigned rs_2 = regIndex(reg);
+	 unsigned rs_1 = regIndex(reg);
 
     // Contruct instruction
     instr->instruction |= opcode;
