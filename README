@@ -5,6 +5,7 @@ As per Shihao Song's instructions, I did not fully implement the branching instr
 Because I was unable to complete the branching instructions, I wasn't able to run my implementation of the matrix problem, though it is in the cpu_traces folder titled 'matrix_trace.' I documented the code by hand and deduced that it worked correctly though. The final memory should start at the base of the memory and be stored in address 0, 8, 16, 24 respectively for out[0], out[1], out[2], and out[3].
 
 
+
 To compile:
 make
 
