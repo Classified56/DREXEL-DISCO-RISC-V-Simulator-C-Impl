@@ -14,9 +14,10 @@ Core *initCore(Instruction_Memory *i_mem)
 		core->memory[i] = 0;
 	
 	 // Manual Initialization of Registers and Memory
-	 core->xregisters[25]=4;
-	 core->xregisters[10]=4;
-	 core->xregisters[22]=1;
+	 core->xregisters[1]=7;
+	 core->xregisters[3]=2;
+	 core->xregisters[5]=5;
+	 core->xregisters[6]=10;
 	 core->memory[0]=16;
 	 core->memory[1]=128;
 	 core->memory[2]=8;
@@ -96,16 +97,16 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		} else if(funct3 == 7) {
 			result = ALU(data1, data2, 3);
 			//printf("AND: %lu=%lu&%lu\n", result, data1, data2);
-		} else if(funct3 == 7) {
+		} else if(funct3 == 6) {
 			result = ALU(data1, data2, 4);
 			//printf("OR: %lu=%lu|%lu\n", result, data1, data2);
-		} else if(funct3 == 7) {
+		} else if(funct3 == 4) {
 			result = ALU(data1, data2, 5);
 			//printf("XOR: %lu=%lu^%lu\n", result, data1, data2);
-		} else if(funct3 == 7) {
+		} else if(funct3 == 1) {
 			result = ALU(data1, data2, 6);
 			//printf("SLL: %lu=%lu<<%lu\n", result, data1, data2);
-		} else if(funct3 == 7) {
+		} else if(funct3 == 5) {
 			result = ALU(data1, data2, 7);
 			//printf("SRL: %lu=%lu<<%lu\n", result, data1, data2);
 		}
