@@ -1,4 +1,9 @@
-This is the C implementation of https://github.com/Shihao-Song/DREXEL-DISCO-RISC-V-Simulator.
+This is the C implementation of Davis Ranney's (dr847) RISC-V core simulator. I completed the core structure in a single cycle, non-pipelined manner. After the instructions are translated to binary using the parser, the core takes over, and runs each instruction through the method decode and execute, which deciphers what the instruction should do, what data to do it on, and then does it. It basically reverse-engineers the parser's job to convert the instructions to binary by decoding the binary and using it to grab certain register data and execute the necessary instructions.
+
+As per Shihao Song's instructions, I did not fully implement the branching instructions. What I did do was properly have it change the PC, but not change what instructions were then executed. For part 2, I will implement it properly so that it loops through the instructions again and gets the proper instruction to execute next. 
+
+Because I was unable to complete the branching instructions, I wasn't able to run my implementation of the matrix problem, though it is in the cpu_traces folder titled 'matrix_trace.' I documented the code by hand and deduced that it worked correctly though. The final memory should start at the base of the memory and be stored in address 0, 8, 16, 24 respectively for out[0], out[1], out[2], and out[3].
+
 
 To compile:
 make
