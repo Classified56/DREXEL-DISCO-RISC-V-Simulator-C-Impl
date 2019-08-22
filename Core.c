@@ -14,14 +14,17 @@ Core *initCore(Instruction_Memory *i_mem)
 		core->memory[i] = 0;
 	
 	 // Manual Initialization of Registers and Memory
-	 core->xregisters[1]=7;
+	 core->xregisters[24]=4;
+	 core->xregisters[2]=7;
 	 core->xregisters[3]=2;
-	 core->xregisters[5]=5;
-	 core->xregisters[6]=10;
+	 core->xregisters[4]=17;
+	 core->xregisters[5]=11;
+	 core->xregisters[6]=13;
 	 core->memory[0]=16;
 	 core->memory[1]=128;
 	 core->memory[2]=8;
 	 core->memory[3]=4;
+	 core->memory[53]=6;
 
 	 printRegisters(core);
     return core;
@@ -35,7 +38,7 @@ bool tickFunc(Core *core)
    unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
    
    // (Step 2) ...
-   //printf("Instruction: %u -- %x\n", instruction, instruction);
+   printf("Instruction: %u -- %x\n", instruction, instruction);
 	
 	int next = decodeAndExecute(core, instruction); 
 
@@ -44,7 +47,7 @@ bool tickFunc(Core *core)
 
    ++core->clk;
 
-	//printf("PC: %lu | CLK: %lu\n", core->PC, core->clk);
+	printf("PC: %lu | CLK: %lu\n", core->PC, core->clk);
 	
    // Are we reaching the final instruction?
    if (core->PC > core->instr_mem->last->addr)
@@ -72,7 +75,7 @@ void printMemory(Core *core) {
 
 int decodeAndExecute(Core *core, unsigned instruction) {
 	unsigned opcode, rd, funct3, rs1, rs2, funct7, imm;
-	uint64_t data1, data2, result;
+	long data1, data2, result;
 	int PC = 4;
 
 	opcode = instruction & 127;
@@ -89,26 +92,26 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		if(funct3 == 0) {
 			if(funct7 == 0) {
 				result = ALU(data1, data2, 1);
-				//printf("ADD: %lu=%lu+%lu\n", result, data1, data2);
+				printf("ADD: %lu=%lu+%lu\n", result, data1, data2);
 			} else if(funct7 == 32) {
 				result = ALU(data1, data2, 2);
-				//printf("SUB: %lu=%lu-%lu\n", result, data1, data2);
+				printf("SUB: %lu=%lu-%lu\n", result, data1, data2);
 			}
 		} else if(funct3 == 7) {
 			result = ALU(data1, data2, 3);
-			//printf("AND: %lu=%lu&%lu\n", result, data1, data2);
+			printf("AND: %lu=%lu&%lu\n", result, data1, data2);
 		} else if(funct3 == 6) {
 			result = ALU(data1, data2, 4);
-			//printf("OR: %lu=%lu|%lu\n", result, data1, data2);
+			printf("OR: %lu=%lu|%lu\n", result, data1, data2);
 		} else if(funct3 == 4) {
 			result = ALU(data1, data2, 5);
-			//printf("XOR: %lu=%lu^%lu\n", result, data1, data2);
+			printf("XOR: %lu=%lu^%lu\n", result, data1, data2);
 		} else if(funct3 == 1) {
 			result = ALU(data1, data2, 6);
-			//printf("SLL: %lu=%lu<<%lu\n", result, data1, data2);
+			printf("SLL: %lu=%lu<<%lu\n", result, data1, data2);
 		} else if(funct3 == 5) {
 			result = ALU(data1, data2, 7);
-			//printf("SRL: %lu=%lu<<%lu\n", result, data1, data2);
+			printf("SRL: %lu=%lu<<%lu\n", result, data1, data2);
 		}
 		loadData(core, rd, result);
 	} else if(opcode == 19) { // I Type instruction
@@ -122,22 +125,22 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 
 		if(funct3 == 0) {
 			result = ALU(data1, data2, 1);
-			//printf("ADDi: %lu=%lu+%lu\n", result, data1, data2);
+			printf("ADDi: %lu=%lu+%lu\n", result, data1, data2);
 		} else if(funct3 == 7) {
 			result = ALU(data1, data2, 3);
-			//printf("ANDi: %lu=%lu&%lu\n", result, data1, data2);
+			printf("ANDi: %lu=%lu&%lu\n", result, data1, data2);
 		} else if(funct3 == 6) {
 			result = ALU(data1, data2, 4);
-			//printf("ORi: %lu=%lu|%lu\n", result, data1, data2);
+			printf("ORi: %lu=%lu|%lu\n", result, data1, data2);
 		} else if(funct3 == 4) {
 			result = ALU(data1, data2, 5);
-			//printf("XORi: %lu=%lu^%lu\n", result, data1, data2);
+			printf("XORi: %lu=%lu^%lu\n", result, data1, data2);
 		} else if(funct3 == 1) {
 			result = ALU(data1, data2, 6);
-			//printf("SLLi: %lu=%lu<<%lu\n", result, data1, data2);
+			printf("SLLi: %lu=%lu<<%lu\n", result, data1, data2);
 		} else if(funct3 == 5) {
 			result = ALU(data1, data2, 7);
-			//printf("SLRi: %lu=%lu>>%lu\n", result, data1, data2);
+			printf("SLRi: %lu=%lu>>%lu\n", result, data1, data2);
 		}
 		loadData(core, rd, result);
 	} else if(opcode == 3) { // ld instruction
@@ -150,7 +153,7 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 
 		if(loadDouble(core, rd, data1+imm)) {
 			result = getRegister(core, rd);
-			//printf("LOAD: R[%u]=M[%u+%u]=%lu\n", rd, rs1, imm, result);
+			printf("LOAD: R[%u]=M[%u+%u]=%lu \n", rd, rs1, imm, result);
 		}
 
 	} else if(opcode == 103) { // jalr instruction 
@@ -166,7 +169,7 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		
 		loadData(core, rd, core->PC);
 		PC = result;
-		//printf("JALR: PC=%lu, R[%u]=%lu", result, rd, getRegister(core, rd));
+		printf("JALR: PC=%lu, R[%u]=%lu", result, rd, getRegister(core, rd));
 	} else if(opcode == 35) { // sd instruction
 		imm = (instruction >> 7) & 31;
 		funct3 = (instruction >> 7+5) & 7;
@@ -177,7 +180,7 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		data1 = getRegister(core, rs1);
 		data2 = getRegister(core, rs2);
 		if(storeDouble(core, data1+imm, data2)) {
-			//printf("STORE: M[%u+%u]=R[%u]=%lu\n", rs1, imm, rs2, result);
+			printf("STORE: M[%u+%u]=R[%u]=%lu\n", rs1, imm, rs2, result);
 		}
 
 	} else if(opcode == 99) { // SB type instruction
@@ -194,26 +197,26 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		
 		if(funct3 == 0) {
 			result = ALU(data1, data2, 8);
-			//printf("BEQ: %lu==%lu : %lu\n", data1, data2, result);
+			printf("BEQ: %lu==%lu : %lu\n", data1, data2, result);
 			if(result){
 				PC = imm;
 			}
 		} else if(funct3 == 1) {
 			result = ALU(data1, data2, 8);
-			//printf("BNE: %lu!=%lu : %lu\n", data1, data2, result);
-			if(!result){
+			printf("BNE: %lu!=%lu : %lu\n", data1, data2, result);
+			if(result == 0){
 				PC = imm;
 			}
 		} else if(funct3 == 4) {
 			result = ALU(data1, data2, 9);
-			//printf("BLT: %lu<%lu : %lu\n", data1, data2, result);
-			if(result == 0){
+			printf("BLT: %lu<%lu : %lu\n", data1, data2, result);
+			if(result){
 				PC = imm;
 			}
 		} else if(funct3 == 5) {
 			result = ALU(data1, data2, 10);
-			//printf("BGE: %lu>=%lu : %lu\n", data1, data2, result);
-			if(result == 0){
+			printf("BGE: %lu>=%lu : %lu\n", data1, data2, result);
+			if(result){
 				PC = imm;
 			}
 		}
@@ -228,12 +231,12 @@ int decodeAndExecute(Core *core, unsigned instruction) {
 		
 		loadData(core, rd, core->PC);
 		PC = result;
-		//printf("JALR: PC=%lu, R[%u]=%lu\n", result, rd, getRegister(core, rd));
+		printf("JALR: PC=%lu, R[%u]=%lu\n", result, rd, getRegister(core, rd));
 
 	} else {
 		printf("OP code undefined: %X\n",  opcode);
 	}
-	//printf("PC = PC + %d\n", PC);
+	printf("PC = PC + %d\n", PC);
 	return PC;
 }
 
@@ -294,18 +297,19 @@ bool loadData(Core *core, int reg, uint64_t data) {
 }
 
 bool loadDouble(Core *core, int reg, int addr) {
-	uint64_t val;
+	uint64_t val = 0;
 	int i;
 	if(addr < 0 || addr > 1023 || reg < 0 || reg > 31) {
 		printf("Load address out of bounds.\n");
 		return false;
 	}
-	//printf("Load - reg: %d, addr: %d", reg, addr);
+	printf("Load - reg: %d, addr: %d\n", reg, addr);
 
 	for(i = 7; i >= 0; i--) {
 		val += core->memory[addr + i];
+		printf("Val before left shift: %lu\n", val);
 		val = val << 8;
-		//printf("Loading: val = %lu from %d\n", val, addr+i);
+		printf("Loading: val = %lu from %d\n", val, addr+i);
 	}
 	core->xregisters[reg] = val;
 	return true;
